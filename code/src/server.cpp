@@ -156,50 +156,6 @@ namespace mainframe {
 			return MethodType::none;
 		}
 
-		/*
-		bool Server::fail(Client& handler, const std::string& msg) {
-			auto respdata = nlohmann::json({
-				{"success", false},
-				{"message", msg},
-				{"data", {}}});
-
-			auto& http = handler.response;
-			http.contenttype = handler.request.headers["accept"];
-			http.code = 200;
-
-			if (http.contenttype == "application/json") {
-				http.data = respdata.dump();
-			} else {
-				auto bsondata = nlohmann::json::to_bson(respdata);
-				http.data = {bsondata.begin(), bsondata.end()};
-			}
-
-			//log::print(tpos::LogLevel::info, "API HOST [{}] {}. Fail: {}", inet_ntoa(handler.sock->addr.sin_addr), handler.request.path, msg);
-			return true;
-		}
-
-		bool Server::success(Client& handler, ApiResponse& resp) {
-			auto respdata = nlohmann::json({
-				{"success", resp.success},
-				{"message", resp.message},
-				{"data", resp.data}});
-
-			auto& http = handler.response;
-			http.contenttype = handler.request.headers["accept"];
-			http.code = 200;
-
-			if (http.contenttype == "application/json") {
-				http.data = respdata.dump();
-			} else {
-				auto bsondata = nlohmann::json::to_bson(respdata);
-				http.data = {bsondata.begin(), bsondata.end()};
-			}
-
-			//log::print(tpos::LogLevel::info, "API HOST [{}] {}", inet_ntoa(handler.sock->addr.sin_addr), handler.request.path);
-			return true;
-		}
-		*/
-
 		std::shared_ptr<Request> Server::createRequest() const {
 			return std::make_shared<Request>();
 		}
