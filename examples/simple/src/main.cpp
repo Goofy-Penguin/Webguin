@@ -6,20 +6,24 @@
 
 using namespace mainframe::webguin;
 
-// http://127.0.0.1:<PORT>/foo
+// http://127.0.0.1:<PORT>
 const int SERVER_PORT = 5050;
 
+// a default server object
 Server server;
 int main() {
+	// register http://127.0.0.1:<PORT>/foo
 	server.addMethod("foo", [](std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
 		response->setCode(200);
 		response->setData("bar");
 	});
 
+	// try to host on specified port
 	if (!server.host(SERVER_PORT)) {
 		return 1;
 	}
 
+	// wait for requests
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}

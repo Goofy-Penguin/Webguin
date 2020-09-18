@@ -6,28 +6,19 @@
 #include <mainframe/webguin/response/base.h>
 
 using namespace mainframe::webguin;
-using namespace mainframe::networking;
 
+// http://127.0.0.1:<PORT>
 const int SERVER_PORT = 5050;
-// TestServer
-// http://127.0.0.1:<PORT>/hello METHOD
-// http://127.0.0.1:<PORT>/foo/* CONTROLLER
-
-// TestController
-// http://127.0.0.1:<PORT>/foo/hello METHOD
-// http://127.0.0.1:<PORT>/foo/bar/* CONTROLLER
-
-// TestControllerSub
-// http://127.0.0.1:<PORT>/foo/bar/hello METHOD
-// http://127.0.0.1:<PORT>/foo/bar/*/* METHOD
-// http://127.0.0.1:<PORT>/foo/bar/* EXECUTE
 
 void testMethod(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
 	response->setCode(200);
 	response->setData("Hello World!");
 }
 
-class ResponseJson;
+// TestControllerSub
+// http://127.0.0.1:<PORT>/foo/bar/hello METHOD
+// http://127.0.0.1:<PORT>/foo/bar/*/* METHOD
+// http://127.0.0.1:<PORT>/foo/bar/* EXECUTE
 class TestControllerSub : public Controller {
 public:
 	TestControllerSub() {
@@ -40,6 +31,10 @@ public:
 	}
 };
 
+
+// TestController
+// http://127.0.0.1:<PORT>/foo/hello METHOD
+// http://127.0.0.1:<PORT>/foo/bar/* CONTROLLER
 class TestController : public Controller {
 public:
 	TestController() {
@@ -48,6 +43,9 @@ public:
 	}
 };
 
+// TestServer
+// http://127.0.0.1:<PORT>/hello METHOD
+// http://127.0.0.1:<PORT>/foo/* CONTROLLER
 class TestServer : public Server {
 public:
 	TestServer() {
@@ -56,6 +54,7 @@ public:
 	}
 };
 
+// create our own server object and host
 TestServer server;
 int main() {
 	if (!server.host(SERVER_PORT)) {

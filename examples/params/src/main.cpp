@@ -8,8 +8,10 @@
 
 using namespace mainframe::webguin;
 
+// http://127.0.0.1:<PORT>
 const int SERVER_PORT = 5050;
 
+// a default server object
 Server server;
 int main() {
 	// http://127.0.0.1:<PORT>/foo/*/{a}/{b}/[c]/[d]
@@ -63,10 +65,12 @@ int main() {
 		response->setData(fmt::format("{} {} {} + {} = {}", a, opStr.front(), b, plusValue, output));
 	});
 
+	// try to host on specified port
 	if (!server.host(SERVER_PORT)) {
 		return 1;
 	}
 
+	// wait for requests
 	while (true) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
