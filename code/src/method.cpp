@@ -5,71 +5,81 @@
 
 namespace mainframe {
 	namespace webguin {
-		Method::Method(const std::string& path_) : path(path_) {
-		}
-
-		Method::Method(const std::string& path_, MethodCallback callback_) : path(path_), callback(callback_) {
+		Method::Method(MethodCallback callback_) : callback(callback_) {
 		}
 
 		void Method::setPath(const std::string& path_) {
 			path = path_;
+
+			parts.clear();
+			for (auto& partStr : mainframe::utils::string::split(path, '/')) {
+				parts.emplace_back(partStr);
+			}
 		}
 
 		const std::string& Method::getPath() {
 			return path;
 		}
 
-		int Method::comparePath(const std::string& path_) {
-			auto& filter = getPath();
+		CompareResult Method::comparePath(const std::vector<std::string>& pathParts) {
+			CompareResult ret;
 
-			auto wildcardPos = filter.find('*');
-			if (wildcardPos == std::string::npos) {
-				return path_ == filter ? 0 : -1;
+			size_t retIndex = 0;
+			size_t maxparts = parts.size();
+
+			for (size_t i = 0; i < maxparts; i++) {
+				const auto& filter = parts[i];
+
+				// if our path is longer than the request path and we're not using wildcard or optionals, then it's wrong
+				auto filterType = filter.getType();
+				if (pathParts.size() <= i) {
+					if (filterType == PathPartType::optional) {
+						if (filter.hasDefault()) {
+							ret.addParam(filter.getValue(), {filter.getDefault(), filter.getValueType()});
+						}
+						break;
+					} else {
+						return ret;
+					}
+				}
+
+				// run a check if our filter matches with the match
+				const auto& match = pathParts[i];
+				if (!filter.compare(match)) {
+					return ret;
+				}
+
+				// populate params if needed and set the return position
+				switch (filter.getType()) {
+					case PathPartType::param:
+					case PathPartType::optional:
+						ret.addParam(filter.getValue(), {match, filter.getValueType()});
+						[[fallthrough]];
+
+					case PathPartType::match:
+						retIndex = i;
+						break;
+
+					default:
+						break;
+				}
+
+				// if we're at the end of our filters, and there's still some part left. the remainer must be a wildcard
+				if (i == maxparts - 1 && maxparts < pathParts.size() && filterType != PathPartType::wildcard) {
+					return ret;
+				}
 			}
 
-			if (path_.size() < filter.size()) {
-				return -1;
-			}
+			// remove conditional parts of the path, to reduce duplicate mapping
+			auto remainingPath = pathParts;
+			remainingPath.erase(remainingPath.begin(), remainingPath.begin() + retIndex);
 
-			size_t curpos = 0;
-			size_t retpos = 0;
-			bool wildcardFound = false;
-
-			auto parts = mainframe::utils::string::split(filter, '/');
-			for (auto& part : parts) {
-				if (!wildcardFound) {
-					retpos = curpos;
-				}
-
-				if (!wildcardFound && part.find('*') != std::string::npos) {
-					wildcardFound = true;
-				}
-
-				if (curpos >= path_.size()) {
-					return -1;
-				}
-
-				auto nextpos = path_.find('/', curpos + 1);
-				if (nextpos == std::string::npos) {
-					nextpos = path_.size();
-				}
-
-				if (part == "*") {
-					curpos = nextpos;
-					continue;
-				}
-
-				if (path_.substr(curpos, nextpos) != part) {
-					return -1;
-				}
-
-				curpos = nextpos;
-			}
-
-			return retpos + 1;
+			ret.setRemainingPath(remainingPath);
+			ret.setResult(true);
+			return ret;
 		}
 
-		void Method::execute(std::shared_ptr<RequestBase> request, std::shared_ptr<ResponseBase> response) {
+		void Method::execute(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
 			if (callback == nullptr) {
 				throw std::runtime_error("callback is nullptr");
 			}

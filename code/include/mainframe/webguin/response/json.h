@@ -4,7 +4,7 @@
 
 namespace mainframe {
 	namespace webguin {
-		class ResponseJson : public ResponseBase {
+		class ResponseJson : public Response {
 		public:
 			ResponseJson();
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 namespace mainframe {
 	namespace webguin {
 		enum class MethodType {

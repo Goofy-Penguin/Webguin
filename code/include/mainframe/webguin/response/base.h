@@ -1,10 +1,8 @@
 #pragma once
 
-#include <mainframe/webguin/http/header.h>
-#include <mainframe/webguin/http/cookie.h>
-#include <mainframe/webguin/server.h>
-#include <mainframe/webguin/client.h>
-#include <mainframe/webguin/timings.h>
+#include <mainframe/webguin/model/http/header.h>
+#include <mainframe/webguin/model/http/cookie.h>
+#include <mainframe/webguin/model/timings.h>
 
 #include <mainframe/utils/event.hpp>
 #include <nlohmann/json.hpp>
@@ -17,7 +15,7 @@ namespace mainframe {
 	namespace webguin {
 		class Client;
 
-		class ResponseBase {
+		class Response {
 			int code = 400;
 			std::string data;
 			std::string contenttype;
@@ -26,7 +24,7 @@ namespace mainframe {
 			std::vector<HttpCookie> cookies;
 
 		public:
-			ResponseBase();
+			Response();
 
 			void setCode(int code_);
 			int getCode() const;

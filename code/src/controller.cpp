@@ -4,43 +4,34 @@
 
 namespace mainframe {
 	namespace webguin {
-		Controller::Controller(const std::string& path) : Method(path) {
-		}
-
-		void Controller::execute(std::shared_ptr<RequestBase> request, std::shared_ptr<ResponseBase> response) {
+		void Controller::execute(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
 
 		}
 
-		bool Controller::onRequest(Client& handler, const std::string& remainerPath) {
+		bool Controller::onRequest(Client& handler, const std::vector<std::string>& path) {
 			for (auto& method : methods) {
-				int lastFound = method->comparePath(remainerPath);
-				if (lastFound == -1) {
+				auto ret = method->comparePath(path);
+				if (!ret.getResult()) {
 					continue;
 				}
 
+				ret.copyParams(handler.request);
 				method->execute(handler.request, handler.response);
 				return true;
 			}
 
 			for (auto& controller : controllers) {
-				int lastFound = controller->comparePath(remainerPath);
-				if (lastFound == -1) {
+				auto ret = controller->comparePath(path);
+				if (!ret.getResult()) {
 					continue;
 				}
 
-				return controller->onRequest(handler, remainerPath.substr(lastFound + 1));
+				ret.copyParams(handler.request);
+				return controller->onRequest(handler, ret.getRemainingPath());
 			}
 
 			execute(handler.request, handler.response);
 			return true;
-		}
-
-		void Controller::addMethod(std::shared_ptr<Method> method) {
-			methods.push_back(method);
-		}
-
-		void Controller::addController(std::shared_ptr<Controller> controller) {
-			controllers.push_back(controller);
 		}
 	}
 }

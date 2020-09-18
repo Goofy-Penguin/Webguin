@@ -9,7 +9,6 @@ set(WEBGUIN_VERSION ${WEBGUIN_VERSION_MAJOR}.${WEBGUIN_VERSION_MINOR} CACHE STRI
 
 # flags
 set(WEBGUIN_DOWNLOAD_MAINFRAME true CACHE BOOL "use mainframe from git repo" FORCE)
-set(BUILD_TESTING OFF)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSPDLOG_FMT_EXTERNAL")
 
@@ -35,8 +34,6 @@ HunterGate(
 
 project ("webguin" VERSION ${WEBGUIN_VERSION})
 
-add_definitions(-DDEBUG)
-
 hunter_add_package(fmt)
 hunter_add_package(nlohmann_json)
 
@@ -47,8 +44,6 @@ if (WIN32)
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-psabi")
 endif()
-
-find_package(CURL REQUIRED)
 
 function(WGAddExecutable projname)
 	message("detected exe:" ${CMAKE_SOURCE_DIR}/exec/${output_target})
@@ -68,3 +63,4 @@ function(WGAddExecutable projname)
 endfunction()
 
 add_subdirectory("code")
+add_subdirectory("examples")

@@ -1,4 +1,6 @@
 #include <mainframe/webguin/client.h>
+#include <mainframe/webguin/request/base.h>
+#include <mainframe/webguin/response/base.h>
 
 #include <fmt/printf.h>
 #include <fmt/format.h>

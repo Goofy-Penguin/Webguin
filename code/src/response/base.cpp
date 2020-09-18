@@ -1,9 +1,10 @@
 #include <mainframe/webguin/response/base.h>
+#include <mainframe/webguin/client.h>
 #include <fmt/format.h>
 
 namespace mainframe {
 	namespace webguin {
-		ResponseBase::ResponseBase() {
+		Response::Response() {
 			addHeader({"content-type", "text/plain"});
 			addHeader({"content-length", std::to_string(data.size())});
 			addHeader({"Access-Control-Allow-Origin", "*"});
@@ -11,29 +12,29 @@ namespace mainframe {
 			addHeader({"connection", "close"});
 		}
 
-		void ResponseBase::setCode(int code_) {
+		void Response::setCode(int code_) {
 			code = code_;
 		}
 
-		int ResponseBase::getCode() const {
+		int Response::getCode() const {
 			return code;
 		}
 
 
-		void ResponseBase::setData(const std::string& data_) {
+		void Response::setData(const std::string& data_) {
 			data = data_;
 			setHeader({"content-length", std::to_string(data.size())});
 		}
 
-		const std::string& ResponseBase::getData() const {
+		const std::string& Response::getData() const {
 			return data;
 		}
 
-		void ResponseBase::addHeader(const HttpHeader& header_) {
+		void Response::addHeader(const HttpHeader& header_) {
 			headers.push_back(header_);
 		}
 
-		void ResponseBase::setHeader(const HttpHeader& header_) {
+		void Response::setHeader(const HttpHeader& header_) {
 			for (auto& header : headers) {
 				if (header.getName() == header_.getName()) {
 					header = header_;
@@ -44,7 +45,7 @@ namespace mainframe {
 			addHeader(header_);
 		}
 
-		bool ResponseBase::hasHeader(const std::string& name) const {
+		bool Response::hasHeader(const std::string& name) const {
 			for (auto& header : headers) {
 				if (header.getName() == name) {
 					return true;
@@ -55,7 +56,7 @@ namespace mainframe {
 		}
 
 
-		const HttpHeader& ResponseBase::getHeader(const std::string& name) const {
+		const HttpHeader& Response::getHeader(const std::string& name) const {
 			for (auto& header : headers) {
 				if (header.getName() == name) {
 					return header;
@@ -65,11 +66,11 @@ namespace mainframe {
 			throw std::runtime_error("no header by name " + name);
 		}
 
-		void ResponseBase::addCookie(const HttpCookie& cookie_) {
+		void Response::addCookie(const HttpCookie& cookie_) {
 			cookies.push_back(cookie_);
 		}
 
-		void ResponseBase::setCookie(const HttpCookie& cookie_) {
+		void Response::setCookie(const HttpCookie& cookie_) {
 			for (auto& cookie : cookies) {
 				if (cookie.getName() == cookie_.getName()) {
 					cookie = cookie_;
@@ -80,7 +81,7 @@ namespace mainframe {
 			addCookie(cookie_);
 		}
 
-		bool ResponseBase::hasCookie(const std::string& name) const {
+		bool Response::hasCookie(const std::string& name) const {
 			for (auto& cookie : cookies) {
 				if (cookie.getName() == name) {
 					return true;
@@ -90,7 +91,7 @@ namespace mainframe {
 			return false;
 		}
 
-		const HttpCookie& ResponseBase::getCookie(const std::string& name) const {
+		const HttpCookie& Response::getCookie(const std::string& name) const {
 			for (auto& cookie : cookies) {
 				if (cookie.getName() == name) {
 					return cookie;
@@ -101,7 +102,7 @@ namespace mainframe {
 		}
 
 
-		bool ResponseBase::writeHeaders(Client& client) const {
+		bool Response::writeHeaders(Client& client) const {
 			std::string buffer;
 			buffer.reserve(1024);
 
@@ -117,7 +118,7 @@ namespace mainframe {
 			return client.send(buffer);
 		}
 
-		bool ResponseBase::writeBody(Client& client) const {
+		bool Response::writeBody(Client& client) const {
 			return client.send(data);
 		}
 	}

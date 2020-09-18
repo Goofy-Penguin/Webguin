@@ -200,12 +200,12 @@ namespace mainframe {
 		}
 		*/
 
-		std::shared_ptr<RequestBase> Server::createRequest() const {
-			return std::make_shared<RequestBase>();
+		std::shared_ptr<Request> Server::createRequest() const {
+			return std::make_shared<Request>();
 		}
 
-		std::shared_ptr<ResponseBase> Server::createResponse() const {
-			return std::make_shared<ResponseBase>();
+		std::shared_ptr<Response> Server::createResponse() const {
+			return std::make_shared<Response>();
 		}
 
 		void Server::processHeaders(Client& threadData, const std::string& rawheaders) {
@@ -388,25 +388,27 @@ namespace mainframe {
 		}
 
 		bool Server::onRequest(Client& handler) {
-			auto path = handler.request->getPath();
+			auto path = mainframe::utils::string::split(handler.request->getPath(), '/');
 
 			for (auto& method : methods) {
-				int lastFound = method->comparePath(path);
-				if (lastFound == -1) {
+				auto ret = method->comparePath(path);
+				if (!ret.getResult()) {
 					continue;
 				}
 
+				ret.copyParams(handler.request);
 				method->execute(handler.request, handler.response);
 				return true;
 			}
 
 			for (auto& controller : controllers) {
-				int lastFound = controller->comparePath(path);
-				if (lastFound == -1) {
+				auto ret = controller->comparePath(path);
+				if (!ret.getResult()) {
 					continue;
 				}
 
-				return controller->onRequest(handler, path.substr(lastFound));
+				ret.copyParams(handler.request);
+				return controller->onRequest(handler, ret.getRemainingPath());
 			}
 
 			return false;
@@ -414,14 +416,6 @@ namespace mainframe {
 
 		bool Server::host(int port) {
 			return sockListener.bind(port) && sockListener.listen();
-		}
-
-		void Server::addMethod(std::shared_ptr<Method> method) {
-			methods.push_back(method);
-		}
-
-		void Server::addController(std::shared_ptr<Controller> controller) {
-			controllers.push_back(controller);
 		}
 	}
 }

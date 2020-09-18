@@ -1,6 +1,9 @@
 ﻿#pragma once
 
-#include <mainframe/webguin/http/methodtype.h>
+#include <mainframe/webguin/controller.h>
+#include <mainframe/webguin/method.h>
+#include <mainframe/webguin/enum/methodtype.h>
+
 #include <mainframe/networking/socket.h>
 #include <nlohmann/json.hpp>
 #include <map>
@@ -11,10 +14,8 @@
 namespace mainframe {
 	namespace webguin {
 		class Client;
-		class Method;
-		class Controller;
-		class RequestBase;
-		class ResponseBase;
+		class Request;
+		class Response;
 
 		class Server {
 		public:
@@ -49,11 +50,26 @@ namespace mainframe {
 
 			void setVerbose(bool mode);
 
-			void addMethod(std::shared_ptr<Method> method);
-			void addController(std::shared_ptr<Controller> controller);
+			template<typename T = Method, typename... TArgs, std::enable_if_t<std::is_base_of<Method, T>::value>* = nullptr>
+			std::shared_ptr<T> addMethod(const std::string& path, TArgs... args) {
+				auto method = std::make_shared<T>(args...);
+				method->setPath(path);
 
-			virtual std::shared_ptr<RequestBase> createRequest() const;
-			virtual std::shared_ptr<ResponseBase> createResponse() const;
+				methods.push_back(method);
+				return method;
+			}
+
+			template<typename T = Controller, typename... TArgs, std::enable_if_t<std::is_base_of<Controller, T>::value>* = nullptr>
+			std::shared_ptr<T> addController(const std::string& path, TArgs... args) {
+				auto controller = std::make_shared<T>(args...);
+				controller->setPath(path);
+
+				controllers.push_back(controller);
+				return controller;
+			}
+
+			virtual std::shared_ptr<Request> createRequest() const;
+			virtual std::shared_ptr<Response> createResponse() const;
 
 			virtual void printVerbose(const Client& threadData) const;
 			virtual bool host(int port);

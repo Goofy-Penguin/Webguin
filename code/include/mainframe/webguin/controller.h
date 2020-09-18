@@ -11,13 +11,26 @@ namespace mainframe {
 			std::vector<std::shared_ptr<Controller>> controllers;
 
 		public:
-			Controller(const std::string& path);
+			template<typename T = Method, typename... TArgs, std::enable_if_t<std::is_base_of<Method, T>::value>* = nullptr>
+			std::shared_ptr<T> addMethod(const std::string& path, TArgs... args) {
+				auto method = std::make_shared<T>(args...);
+				method->setPath(path);
 
-			void addMethod(std::shared_ptr<Method> method);
-			void addController(std::shared_ptr<Controller> controller);
+				methods.push_back(method);
+				return method;
+			}
 
-			virtual void execute(std::shared_ptr<RequestBase> request, std::shared_ptr<ResponseBase> response) override;
-			virtual bool onRequest(Client& handler, const std::string& remainerPath);
+			template<typename T = Controller, typename... TArgs, std::enable_if_t<std::is_base_of<Controller, T>::value>* = nullptr>
+			std::shared_ptr<T> addController(const std::string& path, TArgs... args) {
+				auto controller = std::make_shared<T>(args...);
+				controller->setPath(path);
+
+				controllers.push_back(controller);
+				return controller;
+			}
+
+			virtual void execute(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) override;
+			virtual bool onRequest(Client& handler, const std::vector<std::string>& path);
 		};
 	}
 }

@@ -3,34 +3,50 @@
 
 namespace mainframe {
 	namespace webguin {
-		RequestBase::RequestBase() {
+		Request::Request() {
 		}
 
-		void RequestBase::setData(const std::string& data_) {
+		void Request::setData(const std::string& data_) {
 			data = data_;
 		}
 
-		const std::string& RequestBase::getData() const {
+		const std::string& Request::getData() const {
 			return data;
 		}
 
-		void RequestBase::setPath(const std::string& path_) {
+		void Request::setPath(const std::string& path_) {
 			path = path_;
 		}
 
-		const std::string& RequestBase::getPath() const {
+		const std::string& Request::getPath() const {
 			return path;
 		}
 
-		void RequestBase::setMethod(MethodType method_) {
+		const Param& Request::getParam(const std::string& name) const {
+			return params.find(name)->second;
+		}
+
+		bool Request::hasParam(const std::string& name) const {
+			return params.find(name) != params.end();
+		}
+
+		void Request::setParam(const std::string& name, const Param& value) {
+			params[name] = value;
+		}
+
+		void Request::clearParams() {
+			params.clear();
+		}
+
+		void Request::setMethod(MethodType method_) {
 			method = method_;
 		}
 
-		MethodType RequestBase::getMethod() const {
+		MethodType Request::getMethod() const {
 			return method;
 		}
 
-		void RequestBase::setHeader(const HttpHeader& header_) {
+		void Request::setHeader(const HttpHeader& header_) {
 			for (auto& header : headers) {
 				if (header.getName() == header_.getName()) {
 					header = header_;
@@ -42,11 +58,11 @@ namespace mainframe {
 		}
 
 
-		void RequestBase::addHeader(const HttpHeader& header_) {
+		void Request::addHeader(const HttpHeader& header_) {
 			headers.push_back(header_);
 		}
 
-		bool RequestBase::hasHeader(const std::string& name) const {
+		bool Request::hasHeader(const std::string& name) const {
 			for (auto& header : headers) {
 				if (header.getName() == name) {
 					return true;
@@ -57,7 +73,7 @@ namespace mainframe {
 		}
 
 
-		const HttpHeader& RequestBase::getHeader(const std::string& name) const {
+		const HttpHeader& Request::getHeader(const std::string& name) const {
 			for (auto& header : headers) {
 				if (header.getName() == name) {
 					return header;
@@ -67,7 +83,7 @@ namespace mainframe {
 			throw std::runtime_error("no header by name " + name);
 		}
 
-		void RequestBase::setCookie(const HttpCookie& cookie_) {
+		void Request::setCookie(const HttpCookie& cookie_) {
 			for (auto& cookie : cookies) {
 				if (cookie.getName() == cookie_.getName()) {
 					cookie = cookie_;
@@ -78,11 +94,11 @@ namespace mainframe {
 			addCookie(cookie_);
 		}
 
-		void RequestBase::addCookie(const HttpCookie& cookie_) {
+		void Request::addCookie(const HttpCookie& cookie_) {
 			cookies.push_back(cookie_);
 		}
 
-		bool RequestBase::hasCookie(const std::string& name) const {
+		bool Request::hasCookie(const std::string& name) const {
 			for (auto& cookie : cookies) {
 				if (cookie.getName() == name) {
 					return true;
@@ -92,7 +108,7 @@ namespace mainframe {
 			return false;
 		}
 
-		const HttpCookie& RequestBase::getCookie(const std::string& name) const {
+		const HttpCookie& Request::getCookie(const std::string& name) const {
 			for (auto& cookie : cookies) {
 				if (cookie.getName() == name) {
 					return cookie;
