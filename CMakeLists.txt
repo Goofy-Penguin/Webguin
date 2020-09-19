@@ -6,6 +6,7 @@ include(FetchContent)
 set(WEBGUIN_VERSION_MAJOR 0 CACHE STRING "major version" FORCE)
 set(WEBGUIN_VERSION_MINOR 1 CACHE STRING "minor version" FORCE)
 set(WEBGUIN_VERSION ${WEBGUIN_VERSION_MAJOR}.${WEBGUIN_VERSION_MINOR} CACHE STRING "version" FORCE)
+set(BUILD_TESTING 1 CACHE BOOL FALSE FORCE)
 
 # flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
@@ -22,6 +23,7 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
 endif()
 
 # libraries
+set(build_tests FALSE)
 FetchContent_Declare(mainframe GIT_REPOSITORY https://github.com/Goofy-Penguin/Mainframe.git)
 FetchContent_MakeAvailable(mainframe)
 
