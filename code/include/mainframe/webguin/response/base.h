@@ -3,6 +3,7 @@
 #include <mainframe/webguin/model/http/header.h>
 #include <mainframe/webguin/model/http/cookie.h>
 #include <mainframe/webguin/model/timings.h>
+#include <mainframe/webguin/enum/httpcode.h>
 
 #include <mainframe/utils/event.hpp>
 #include <nlohmann/json.hpp>
@@ -16,7 +17,7 @@ namespace mainframe {
 		class Client;
 
 		class Response {
-			int code = 400;
+			HttpCode code = HttpCode::none;
 			std::string data;
 			std::string contenttype;
 			HttpTimings timings;
@@ -26,8 +27,8 @@ namespace mainframe {
 		public:
 			Response();
 
-			void setCode(int code_);
-			int getCode() const;
+			void setCode(HttpCode code_);
+			HttpCode getCode() const;
 
 			const std::string& getData() const;
 
