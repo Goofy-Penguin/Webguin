@@ -22,6 +22,7 @@ namespace mainframe {
 		public:
 			Method() = default;
 			Method(MethodCallback callback_);
+			virtual ~Method() = default;
 
 			CompareResult comparePath(const std::vector<std::string>& pathParts);
 
