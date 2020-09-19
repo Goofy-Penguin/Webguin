@@ -28,7 +28,7 @@ namespace mainframe {
 			const std::map<std::string, Param>& getParams() const;
 			void addParam(const std::string& name, const Param& value);
 
-			void CompareResult::copyParams(std::shared_ptr<Request> req) const;
+			void CompareResult::copyParams(Request* req) const;
 		};
 	}
 }

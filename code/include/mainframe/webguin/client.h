@@ -13,9 +13,9 @@ namespace mainframe {
 		class Client {
 		public:
 			HttpTimings timings;
-			std::shared_ptr<Request> request;
-			std::shared_ptr<Response> response;
-			std::shared_ptr<mainframe::networking::Socket> sock;
+			std::unique_ptr<Request> request;
+			std::unique_ptr<Response> response;
+			std::unique_ptr<mainframe::networking::Socket> sock;
 			std::thread* thread = nullptr;
 
 			Client() = default;

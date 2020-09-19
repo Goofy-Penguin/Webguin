@@ -354,7 +354,7 @@ namespace mainframe {
 					continue;
 				}
 
-				ret.copyParams(handler.request);
+				ret.copyParams(handler.request.get());
 				method->execute(handler.request.get(), handler.response.get());
 				return true;
 			}
@@ -365,7 +365,7 @@ namespace mainframe {
 					continue;
 				}
 
-				ret.copyParams(handler.request);
+				ret.copyParams(handler.request.get());
 				return controller->onRequest(handler, ret.getRemainingPath());
 			}
 

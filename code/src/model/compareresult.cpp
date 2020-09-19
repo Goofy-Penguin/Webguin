@@ -9,7 +9,7 @@ namespace mainframe {
 
 		}
 
-		void CompareResult::copyParams(std::shared_ptr<Request> req) const {
+		void CompareResult::copyParams(Request* req) const {
 			for (auto& param : params) {
 				req->setParam(param.first, param.second);
 			}
