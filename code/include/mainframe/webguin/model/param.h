@@ -30,7 +30,6 @@ namespace mainframe {
 			operator double() const { return std::stod(raw); }
 			operator long double() const { return std::stold(raw); }
 
-			operator std::string () const { return raw; }
 			operator const std::string& () const { return raw; }
 			operator bool() const { return std::stoll(raw) > 0; }
 
