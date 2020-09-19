@@ -1,0 +1,27 @@
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: push
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get latest CMake
+      uses: lukka/get-cmake@v3.17.2
+
+    - name: Install dependencies
+      run: |
+        apt update && apt install libgl1-mesa-glx libgl1-mesa-dev libglew-dev ninja-build make python pkg-config gcc g++ git -y
+
+    - name: Build
+      run: |
+        test -d build || mkdir build
+        cd build
+        cmake .. -G Ninja -Wno-dev
+        ninja
+
+    # TODO probably run the tests
