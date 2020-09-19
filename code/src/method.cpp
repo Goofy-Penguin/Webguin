@@ -57,7 +57,7 @@ namespace mainframe {
 						[[fallthrough]];
 
 					case PathPartType::match:
-						retIndex = i;
+						retIndex = i + 1;
 						break;
 
 					default:
