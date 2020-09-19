@@ -15,7 +15,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        apt update && apt install libgl1-mesa-glx libgl1-mesa-dev libglew-dev ninja-build make python pkg-config gcc g++ git -y
+        apt update && apt install sudo && sudo apt install libgl1-mesa-glx libgl1-mesa-dev libglew-dev ninja-build make python pkg-config gcc g++ git -y
 
     - name: Build
       run: |
