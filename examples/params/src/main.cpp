@@ -15,7 +15,7 @@ const int SERVER_PORT = 5050;
 Server server;
 int main() {
 	// http://127.0.0.1:<PORT>/foo/*/{a}/{b}/[c]/[d]
-	server.addMethod("foo/*/{a}/{b}/[c]/[d]", [](std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
+	server.addMethod("foo/*/{a}/{b}/[c]/[d]", [](const Request* request, Response* response) {
 		std::string ret = fmt::format("path: {}\r\n", request->getPath());
 
 		// params
@@ -37,7 +37,7 @@ int main() {
 	});
 
 	// http://127.0.0.1:<PORT>/math/{a:number}/{operator:string}/{b:number}/[plusValue:number=30]
-	server.addMethod("math/{a:number}/{operator:string}/{b:number}/[plusValue:number=30]", [](std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
+	server.addMethod("math/{a:number}/{operator:string}/{b:number}/[plusValue:number=30]", [](const Request* request, Response* response) {
 		// params
 		std::string opStr = request->getParam("operator");
 		double a = request->getParam("a");

@@ -38,14 +38,14 @@ namespace mainframe {
 
 			std::lock_guard<std::mutex> lockGuard(lock);
 			for (size_t i = 0; i < threads; i++) {
-				auto data = std::make_shared<Client>();
-
-				std::thread* thread = new std::thread([this, data] {
-					threadWorker(*data);
+				auto client = std::make_unique<Client>();
+				auto clientPtr = client.get();
+				std::thread* thread = new std::thread([this, clientPtr] {
+					threadWorker(*clientPtr);
 				});
 
-				data->thread = thread;
-				workerThreads[thread] = data;
+				client->thread = thread;
+				workerThreads[thread] = std::move(client);
 			}
 		}
 
@@ -71,14 +71,14 @@ namespace mainframe {
 
 		void Server::threadListener() {
 			while (!hitTheBrakes) {
-				auto clientsock = std::make_shared<mainframe::networking::Socket>();
+				auto clientsock = std::make_unique<mainframe::networking::Socket>();
 				if (!sockListener.accept(clientsock.get())) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(10));
 					continue;
 				}
 
 				std::lock_guard<std::mutex> lockGuard(lock);
-				socks.push_back(clientsock);
+				socks.push_back(std::move(clientsock));
 			}
 		}
 
@@ -156,12 +156,12 @@ namespace mainframe {
 			return MethodType::none;
 		}
 
-		std::shared_ptr<Request> Server::createRequest() const {
-			return std::make_shared<Request>();
+		std::unique_ptr<Request> Server::createRequest() const {
+			return std::make_unique<Request>();
 		}
 
-		std::shared_ptr<Response> Server::createResponse() const {
-			return std::make_shared<Response>();
+		std::unique_ptr<Response> Server::createResponse() const {
+			return std::make_unique<Response>();
 		}
 
 		void Server::processHeaders(Client& threadData, const std::string& rawheaders) {
@@ -316,10 +316,12 @@ namespace mainframe {
 
 				{
 					std::lock_guard<std::mutex> lockGuard(lock);
-					if (!socks.empty()) {
-						threadData.sock = socks.front();
-						socks.erase(socks.begin());
+					if (socks.empty()) {
+						continue;
 					}
+
+					threadData.sock = std::move(socks.front());
+					socks.erase(socks.begin());
 				}
 
 				if (threadData.sock == nullptr) {
@@ -353,7 +355,7 @@ namespace mainframe {
 				}
 
 				ret.copyParams(handler.request);
-				method->execute(handler.request, handler.response);
+				method->execute(handler.request.get(), handler.response.get());
 				return true;
 			}
 

@@ -13,7 +13,7 @@ const int SERVER_PORT = 5050;
 Server server;
 int main() {
 	// register http://127.0.0.1:<PORT>/foo
-	server.addMethod("foo", [](std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
+	server.addMethod("foo", [](const Request* request, Response* response) {
 		response->setCode(200);
 		response->setData("bar");
 	});

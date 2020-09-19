@@ -10,7 +10,7 @@ using namespace mainframe::webguin;
 // http://127.0.0.1:<PORT>
 const int SERVER_PORT = 5050;
 
-void testMethod(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
+void testMethod(const Request* request, Response* response) {
 	response->setCode(200);
 	response->setData("Hello World!");
 }
@@ -26,7 +26,7 @@ public:
 		addMethod("*/*", testMethod);
 	}
 
-	virtual void execute(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) override {
+	virtual void execute(const Request* request, Response* response) override {
 		testMethod(request, response);
 	}
 };

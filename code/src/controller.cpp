@@ -4,7 +4,7 @@
 
 namespace mainframe {
 	namespace webguin {
-		void Controller::execute(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
+		void Controller::execute(const Request* request, Response* response) {
 
 		}
 
@@ -16,7 +16,7 @@ namespace mainframe {
 				}
 
 				ret.copyParams(handler.request);
-				method->execute(handler.request, handler.response);
+				method->execute(handler.request.get(), handler.response.get());
 				return true;
 			}
 
@@ -30,7 +30,7 @@ namespace mainframe {
 				return controller->onRequest(handler, ret.getRemainingPath());
 			}
 
-			execute(handler.request, handler.response);
+			execute(handler.request.get(), handler.response.get());
 			return true;
 		}
 	}

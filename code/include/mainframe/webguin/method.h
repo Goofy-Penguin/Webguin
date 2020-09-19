@@ -12,7 +12,7 @@ namespace mainframe {
 		class Request;
 		class Response;
 
-		using MethodCallback = std::function<void(std::shared_ptr<const Request>, std::shared_ptr<Response>)>;
+		using MethodCallback = std::function<void(const Request*, Response*)>;
 
 		class Method {
 			std::string path;
@@ -28,7 +28,7 @@ namespace mainframe {
 			void setPath(const std::string& path_);
 			const std::string& getPath();
 
-			virtual void execute(std::shared_ptr<const Request> request, std::shared_ptr<Response> response);
+			virtual void execute(const Request* request, Response* response);
 		};
 	}
 }

@@ -24,10 +24,10 @@ namespace mainframe {
 			std::thread* worker;
 			mainframe::networking::Socket sockListener;
 			std::mutex lock;
-			std::vector<std::shared_ptr<mainframe::networking::Socket>> socks;
-			std::map<std::thread*, std::shared_ptr<Client>> workerThreads;
-			std::vector<std::shared_ptr<Method>> methods;
-			std::vector<std::shared_ptr<Controller>> controllers;
+			std::vector<std::unique_ptr<mainframe::networking::Socket>> socks;
+			std::map<std::thread*, std::unique_ptr<Client>> workerThreads;
+			std::vector<std::unique_ptr<Method>> methods;
+			std::vector<std::unique_ptr<Controller>> controllers;
 			bool hitTheBrakes = false;
 			bool verbose = false;
 
@@ -51,25 +51,27 @@ namespace mainframe {
 			void setVerbose(bool mode);
 
 			template<typename T = Method, typename... TArgs, std::enable_if_t<std::is_base_of<Method, T>::value>* = nullptr>
-			std::shared_ptr<T> addMethod(const std::string& path, TArgs... args) {
-				auto method = std::make_shared<T>(args...);
+			T& addMethod(const std::string& path, TArgs... args) {
+				auto method = std::make_unique<T>(args...);
 				method->setPath(path);
 
-				methods.push_back(method);
-				return method;
+				auto& ptr = *method;
+				methods.push_back(std::move(method));
+				return ptr;
 			}
 
 			template<typename T = Controller, typename... TArgs, std::enable_if_t<std::is_base_of<Controller, T>::value>* = nullptr>
-			std::shared_ptr<T> addController(const std::string& path, TArgs... args) {
-				auto controller = std::make_shared<T>(args...);
+			T& addController(const std::string& path, TArgs... args) {
+				auto controller = std::make_unique<T>(args...);
 				controller->setPath(path);
 
-				controllers.push_back(controller);
-				return controller;
+				auto& ptr = *controller;
+				controllers.push_back(std::move(controller));
+				return ptr;
 			}
 
-			virtual std::shared_ptr<Request> createRequest() const;
-			virtual std::shared_ptr<Response> createResponse() const;
+			virtual std::unique_ptr<Request> createRequest() const;
+			virtual std::unique_ptr<Response> createResponse() const;
 
 			virtual void printVerbose(const Client& threadData) const;
 			virtual bool host(int port);

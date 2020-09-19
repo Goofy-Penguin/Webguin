@@ -79,7 +79,7 @@ namespace mainframe {
 			return ret;
 		}
 
-		void Method::execute(std::shared_ptr<const Request> request, std::shared_ptr<Response> response) {
+		void Method::execute(const Request* request, Response* response) {
 			if (callback == nullptr) {
 				throw std::runtime_error("callback is nullptr");
 			}
