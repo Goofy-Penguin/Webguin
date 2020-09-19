@@ -67,4 +67,7 @@ function(WGAddExecutable projname)
 endfunction()
 
 add_subdirectory("code")
-add_subdirectory("examples")
+
+if(build_tests)
+	add_subdirectory("examples")
+endif()
