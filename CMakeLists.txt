@@ -24,8 +24,11 @@ endif()
 
 # libraries
 set(build_tests FALSE)
-FetchContent_Declare(mainframe GIT_REPOSITORY https://github.com/Goofy-Penguin/Mainframe.git)
-FetchContent_MakeAvailable(mainframe)
+FetchContent_GetProperties(mainframe)
+if(NOT mainframe_POPULATED)
+	FetchContent_Declare(mainframe GIT_REPOSITORY https://github.com/Goofy-Penguin/Mainframe.git)
+	FetchContent_MakeAvailable(mainframe)
+endif()
 
 include("code/cmake/HunterGate.cmake")
 HunterGate(
