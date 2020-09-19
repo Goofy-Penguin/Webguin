@@ -1,6 +1,6 @@
 #include <thread>
-
 #include <filesystem>
+#include <atomic>
 
 #include <mainframe/webguin/server.h>
 #include <mainframe/webguin/client.h>
