@@ -21,6 +21,10 @@ namespace mainframe {
 			return path;
 		}
 
+		bool Method::check(const Request* request) {
+			return true;
+		}
+
 		CompareResult Method::comparePath(const std::vector<std::string>& pathParts) {
 			CompareResult ret;
 

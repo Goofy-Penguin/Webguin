@@ -29,6 +29,7 @@ namespace mainframe {
 			void setPath(const std::string& path_);
 			const std::string& getPath();
 
+			virtual bool check(const Request* request);
 			virtual void execute(const Request* request, Response* response);
 		};
 	}

@@ -350,7 +350,7 @@ namespace mainframe {
 
 			for (auto& method : methods) {
 				auto ret = method->comparePath(path);
-				if (!ret.getResult()) {
+				if (!ret.getResult() || !method->check(handler.request.get())) {
 					continue;
 				}
 

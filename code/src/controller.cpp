@@ -11,7 +11,7 @@ namespace mainframe {
 		bool Controller::onRequest(Client& handler, const std::vector<std::string>& path) {
 			for (auto& method : methods) {
 				auto ret = method->comparePath(path);
-				if (!ret.getResult()) {
+				if (!ret.getResult() || !method->check(handler.request.get())) {
 					continue;
 				}
 
