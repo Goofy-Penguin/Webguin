@@ -26,6 +26,7 @@ namespace mainframe {
 
 		public:
 			Response();
+			virtual ~Response() = default;
 
 			void setCode(HttpCode code_);
 			HttpCode getCode() const;

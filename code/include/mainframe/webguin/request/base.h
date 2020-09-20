@@ -27,6 +27,7 @@ namespace mainframe {
 
 		public:
 			Request();
+			virtual ~Request() = default;
 
 			void setData(const std::string& data_);
 			const std::string& getData() const;
