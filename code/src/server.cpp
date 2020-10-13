@@ -156,6 +156,26 @@ namespace mainframe {
 			return MethodType::none;
 		}
 
+		std::vector<Controller*> Server::getControllers() {
+			std::vector<Controller*> ret;
+
+			for (auto& c : controllers) {
+				ret.push_back(c.get());
+			}
+
+			return ret;
+		}
+
+		std::vector<Method*> Server::getMethods() {
+			std::vector<Method*> ret;
+
+			for (auto& m : methods) {
+				ret.push_back(m.get());
+			}
+
+			return ret;
+		}
+
 		std::unique_ptr<Request> Server::createRequest() const {
 			return std::make_unique<Request>();
 		}
@@ -203,7 +223,11 @@ namespace mainframe {
 			// process request data
 			int datalength = 0;
 			if (req->hasHeader("content-length")) {
-				datalength = std::stoi(req->getHeader("content-length").getValue());
+				try {
+					datalength = std::stoi(req->getHeader("content-length").getValue());
+				} catch (const std::exception& e) {
+					return false;
+				}
 			}
 
 			std::string body;

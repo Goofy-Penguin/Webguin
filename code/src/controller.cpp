@@ -33,5 +33,25 @@ namespace mainframe {
 			execute(handler.request.get(), handler.response.get());
 			return true;
 		}
+
+		std::vector<Controller*> Controller::getControllers() {
+			std::vector<Controller*> ret;
+
+			for (auto& c : controllers) {
+				ret.push_back(c.get());
+			}
+
+			return ret;
+		}
+
+		std::vector<Method*> Controller::getMethods() {
+			std::vector<Method*> ret;
+
+			for (auto& m : methods) {
+				ret.push_back(m.get());
+			}
+
+			return ret;
+		}
 	}
 }
