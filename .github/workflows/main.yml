@@ -16,13 +16,17 @@ jobs:
     - name: Install dependencies
       run: |
         command -v sudo &> /dev/null || (apt update && apt install sudo)
-        sudo apt update && sudo apt install libgl1-mesa-glx libgl1-mesa-dev libglew-dev ninja-build make python pkg-config gcc g++ git -y
+        sudo apt update && sudo apt install ninja-build make python pkg-config g++-10 -y
 
-    - name: Build
+    - name: CMake
       run: |
         test -d build || mkdir build
         cd build
+        export CC=/usr/bin/gcc-10
+        export CXX=/usr/bin/g++-10
         cmake .. -G Ninja -Wno-dev
-        ninja
 
-    # TODO probably run the tests
+    - name: Ninja
+      run: |
+        cd build
+        ninja
