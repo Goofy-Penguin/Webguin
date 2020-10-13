@@ -13,11 +13,15 @@ namespace mainframe {
 
 			parts.clear();
 			for (auto& partStr : mainframe::utils::string::split(path, '/')) {
-				parts.emplace_back(partStr);
+				std::string lowerPart = partStr;
+				std::transform(lowerPart.begin(), lowerPart.end(), lowerPart.begin(), ::tolower);
+
+
+				parts.emplace_back(lowerPart);
 			}
 		}
 
-		const std::string& Method::getPath() {
+		const std::string& Method::getPath() const {
 			return path;
 		}
 
@@ -25,7 +29,11 @@ namespace mainframe {
 			return true;
 		}
 
-		CompareResult Method::comparePath(const std::vector<std::string>& pathParts) {
+		const std::vector<PathPart>& Method::getFilter() const {
+			return parts;
+		}
+
+		CompareResult Method::comparePath(const std::vector<std::string>& pathParts) const {
 			CompareResult ret;
 
 			size_t retIndex = 0;
@@ -41,10 +49,14 @@ namespace mainframe {
 						if (filter.hasDefault()) {
 							ret.addParam(filter.getValue(), {filter.getDefault(), filter.getValueType()});
 						}
+
 						break;
-					} else {
-						return ret;
+					} else if (filterType == PathPartType::wildcard && i == maxparts - 1) {
+						// `foobar` should refer to `foobar/*`
+						break;
 					}
+
+					return ret;
 				}
 
 				// run a check if our filter matches with the match
