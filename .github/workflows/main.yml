@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies
       run: |
         command -v sudo &> /dev/null || (apt update && apt install sudo)
-        sudo apt update && sudo apt install ninja-build make python pkg-config g++-10 -y
+        sudo apt update && sudo apt install ninja-build libgl1-mesa-glx libgl1-mesa-dev libglew-dev ninja-build libusb-dev make python pkg-config g++-10 -y
 
     - name: CMake
       run: |
