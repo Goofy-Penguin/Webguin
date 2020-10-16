@@ -1,6 +1,7 @@
 #include <mainframe/webguin/model/pathpart.h>
 #include <vector>
 #include <stdexcept>
+#include <algorithm>
 
 namespace mainframe {
 	namespace webguin {
@@ -133,6 +134,22 @@ namespace mainframe {
 			return type;
 		}
 
+		std::string PathPart::getValueTypeStr() const {
+			switch (valueType) {
+				case ParamType::bool_: return "bool";
+				case ParamType::double_: return "double";
+				case ParamType::float_: return "float";
+				case ParamType::int_: return "int";
+				case ParamType::long_: return "long";
+				case ParamType::number: return "number";
+				case ParamType::string: return "string";
+
+				default:
+					return "";
+			}
+		}
+
+
 		bool PathPart::compare(const std::string& path) const {
 			switch (type) {
 				case PathPartType::param:
@@ -140,8 +157,12 @@ namespace mainframe {
 				case PathPartType::wildcard:
 					return true;
 
-				case PathPartType::match:
-					return path == value;
+				case PathPartType::match: {
+					std::string lowerpath = path;
+					std::transform(lowerpath.begin(), lowerpath.end(), lowerpath.begin(), ::tolower);
+
+					return lowerpath == value;
+				}
 
 				default:
 					return false;

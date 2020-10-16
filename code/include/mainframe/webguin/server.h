@@ -70,6 +70,9 @@ namespace mainframe {
 				return ptr;
 			}
 
+			std::vector<Controller*> getControllers();
+			std::vector<Method*> getMethods();
+
 			virtual std::unique_ptr<Request> createRequest() const;
 			virtual std::unique_ptr<Response> createResponse() const;
 

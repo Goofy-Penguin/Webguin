@@ -35,6 +35,7 @@ namespace mainframe {
 
 			void setValueType(ParamType valueType);
 			ParamType getValueType() const;
+			std::string getValueTypeStr() const;
 
 			bool compare(const std::string& path) const;
 		};

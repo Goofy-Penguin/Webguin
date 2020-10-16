@@ -14,7 +14,7 @@ Server server;
 int main() {
 	// register http://127.0.0.1:<PORT>/foo
 	server.addMethod("foo", [](const Request* request, Response* response) {
-		response->setCode(200);
+		response->setCode(HttpCode::OK);
 		response->setData("bar");
 	});
 

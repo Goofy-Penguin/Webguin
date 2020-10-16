@@ -31,6 +31,9 @@ namespace mainframe {
 				return ptr;
 			}
 
+			std::vector<Controller*> getControllers();
+			std::vector<Method*> getMethods();
+
 			virtual void execute(const Request* request, Response* response) override;
 			virtual bool onRequest(Client& handler, const std::vector<std::string>& path);
 		};

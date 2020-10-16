@@ -22,12 +22,15 @@ namespace mainframe {
 		public:
 			Method() = default;
 			Method(MethodCallback callback_);
+			virtual ~Method() = default;
 
-			CompareResult comparePath(const std::vector<std::string>& pathParts);
+			CompareResult comparePath(const std::vector<std::string>& pathParts) const;
 
 			void setPath(const std::string& path_);
-			const std::string& getPath();
+			const std::string& getPath() const;
+			const std::vector<PathPart>& getFilter() const;
 
+			virtual bool check(const Request* request);
 			virtual void execute(const Request* request, Response* response);
 		};
 	}

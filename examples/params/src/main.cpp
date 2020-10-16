@@ -32,7 +32,7 @@ int main() {
 		ret += fmt::format("d: {}\r\n", d);
 
 		// response
-		response->setCode(200);
+		response->setCode(HttpCode::OK);
 		response->setData(ret);
 	});
 
@@ -61,7 +61,7 @@ int main() {
 		output += plusValue;
 
 		// response
-		response->setCode(200);
+		response->setCode(HttpCode::OK);
 		response->setData(fmt::format("{} {} {} + {} = {}", a, opStr.front(), b, plusValue, output));
 	});
 

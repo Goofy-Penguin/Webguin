@@ -11,7 +11,7 @@ using namespace mainframe::webguin;
 const int SERVER_PORT = 5050;
 
 void testMethod(const Request* request, Response* response) {
-	response->setCode(200);
+	response->setCode(HttpCode::OK);
 	response->setData("Hello World!");
 }
 

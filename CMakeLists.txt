@@ -6,9 +6,9 @@ include(FetchContent)
 set(WEBGUIN_VERSION_MAJOR 0 CACHE STRING "major version" FORCE)
 set(WEBGUIN_VERSION_MINOR 1 CACHE STRING "minor version" FORCE)
 set(WEBGUIN_VERSION ${WEBGUIN_VERSION_MAJOR}.${WEBGUIN_VERSION_MINOR} CACHE STRING "version" FORCE)
+set(BUILD_TESTING 1 CACHE BOOL FALSE FORCE)
 
 # flags
-set(WEBGUIN_DOWNLOAD_MAINFRAME true CACHE BOOL "use mainframe from git repo" FORCE)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSPDLOG_FMT_EXTERNAL")
 
@@ -23,8 +23,12 @@ if (MSVC_VERSION GREATER_EQUAL "1900")
 endif()
 
 # libraries
-FetchContent_Declare(mainframe GIT_REPOSITORY https://github.com/Goofy-Penguin/Mainframe.git)
-FetchContent_MakeAvailable(mainframe)
+set(build_tests FALSE)
+FetchContent_GetProperties(mainframe)
+if(NOT mainframe_POPULATED)
+	FetchContent_Declare(mainframe GIT_REPOSITORY https://github.com/Goofy-Penguin/Mainframe.git)
+	FetchContent_MakeAvailable(mainframe)
+endif()
 
 include("code/cmake/HunterGate.cmake")
 HunterGate(
@@ -63,4 +67,7 @@ function(WGAddExecutable projname)
 endfunction()
 
 add_subdirectory("code")
-add_subdirectory("examples")
+
+if(build_tests)
+	add_subdirectory("examples")
+endif()

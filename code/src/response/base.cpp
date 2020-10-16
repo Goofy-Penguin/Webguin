@@ -12,11 +12,11 @@ namespace mainframe {
 			addHeader({"connection", "close"});
 		}
 
-		void Response::setCode(int code_) {
+		void Response::setCode(HttpCode code_) {
 			code = code_;
 		}
 
-		int Response::getCode() const {
+		HttpCode Response::getCode() const {
 			return code;
 		}
 

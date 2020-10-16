@@ -1,4 +1,5 @@
 #include <mainframe/webguin/model/param.h>
+#include <algorithm>
 
 namespace mainframe {
 	namespace webguin {
