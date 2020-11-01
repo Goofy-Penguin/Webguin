@@ -38,8 +38,7 @@ namespace mainframe {
 			bool readHttpHeader(Client& threadData, const std::string& rawheaders);
 			void processHeaders(Client& threadData, const std::string& rawheaders);
 			bool readHttpBody(Client& threadData);
-			void handleCallback(Client& threadData, std::string& headersstr);
-			bool writeResponse(Client& threadData, const std::string& headersstr);
+			void handleCallback(Client& threadData);
 			bool HandleRequest(Client& threadData);
 
 			MethodType createMethodFromString(const std::string& method);

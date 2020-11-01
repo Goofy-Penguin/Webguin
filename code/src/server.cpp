@@ -249,15 +249,20 @@ namespace mainframe {
 			return true;
 		}
 
-		void Server::handleCallback(Client& client, std::string& headersstr) {
+		void Server::handleCallback(Client& client) {
 			auto& req = client.request;
 			auto& resp = client.response;
 
 			if (req->getMethod() == MethodType::options) {
-				headersstr += "HTTP/1.1 200\r\n";
-				headersstr += "Access-Control-Allow-Methods: *\r\n";
-				headersstr += "Access-Control-Allow-Headers: *\r\n";
-				headersstr += "Access-Control-Max-Age: 1728000\r\n";
+				resp->setCode(HttpCode::OK);
+
+				resp->clearHeaders();
+				resp->addHeader({"Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"});
+				resp->addHeader({"Access-Control-Allow-Headers", "*"});
+				resp->addHeader({"Access-Control-Allow-Origin", "*"});
+				resp->addHeader({"Access-Control-Allow-Credentials", "*"});
+				resp->addHeader({"Access-Control-Max-Age:", "1728000"});
+				resp->addHeader({"Allow", "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"});
 			} else {
 #ifndef DEBUG
 				try {
@@ -271,8 +276,6 @@ namespace mainframe {
 					fmt::print(" worker error {}: {}\n", req->getPath(), err.what());
 				}
 #endif
-
-				headersstr += fmt::format("HTTP/1.1 {}\r\n", resp->getCode());
 			}
 		}
 
@@ -298,7 +301,7 @@ namespace mainframe {
 
 			// handle response callback
 			std::string headersstr;
-			handleCallback(threadData, headersstr);
+			handleCallback(threadData);
 
 			timings.processingEnd = timings.writeStart = static_cast<time_t>(mainframe::utils::time::getMS());
 
