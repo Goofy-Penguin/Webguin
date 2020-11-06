@@ -34,9 +34,7 @@ namespace mainframe {
 				threadListener();
 			});
 
-			const size_t threads = 4;
-
-			std::lock_guard<std::mutex> lockGuard(lock);
+			const size_t threads = 2;
 			for (size_t i = 0; i < threads; i++) {
 				auto client = std::make_unique<Client>();
 				auto clientPtr = client.get();
@@ -58,7 +56,6 @@ namespace mainframe {
 				delete worker;
 			}
 
-			std::lock_guard<std::mutex> lockGuard(lock);
 			for (auto& pair : workerThreads) {
 				auto& t = pair.second->thread;
 
@@ -77,8 +74,7 @@ namespace mainframe {
 					continue;
 				}
 
-				std::lock_guard<std::mutex> lockGuard(lock);
-				socks.push_back(std::move(clientsock));
+				socks.push(std::move(clientsock));
 			}
 		}
 
@@ -342,14 +338,12 @@ namespace mainframe {
 				threadData.sock = nullptr;
 
 				{
-					std::lock_guard<std::mutex> lockGuard(lock);
-					if (socks.empty()) {
+					if (socks.available()) {
 						std::this_thread::sleep_for(std::chrono::milliseconds(10));
 						continue;
 					}
 
-					threadData.sock = std::move(socks.front());
-					socks.erase(socks.begin());
+					threadData.sock = socks.pop();
 				}
 
 				if (threadData.sock == nullptr) {

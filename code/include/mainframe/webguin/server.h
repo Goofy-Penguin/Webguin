@@ -5,6 +5,7 @@
 #include <mainframe/webguin/enum/methodtype.h>
 
 #include <mainframe/networking/socket.h>
+#include <mainframe/utils/ringbuffer.hpp>
 #include <nlohmann/json.hpp>
 #include <map>
 #include <thread>
@@ -23,8 +24,7 @@ namespace mainframe {
 		private:
 			std::thread* worker;
 			mainframe::networking::Socket sockListener;
-			std::mutex lock;
-			std::vector<std::unique_ptr<mainframe::networking::Socket>> socks;
+			mainframe::utils::ringbuffer<std::shared_ptr<mainframe::networking::Socket>> socks {64};
 			std::map<std::thread*, std::unique_ptr<Client>> workerThreads;
 			std::vector<std::unique_ptr<Method>> methods;
 			std::vector<std::unique_ptr<Controller>> controllers;
