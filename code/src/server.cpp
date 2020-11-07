@@ -338,7 +338,7 @@ namespace mainframe {
 				threadData.sock = nullptr;
 
 				{
-					if (socks.available()) {
+					if (!socks.available()) {
 						std::this_thread::sleep_for(std::chrono::milliseconds(10));
 						continue;
 					}
