@@ -33,6 +33,7 @@ namespace mainframe {
 
 			const std::string& getData() const;
 
+			void clearHeaders();
 			void addHeader(const HttpHeader& header_);
 			void setHeader(const HttpHeader& header_);
 			bool hasHeader(const std::string& name) const;

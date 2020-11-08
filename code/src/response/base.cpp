@@ -34,6 +34,10 @@ namespace mainframe {
 			headers.push_back(header_);
 		}
 
+		void Response::clearHeaders() {
+			headers.clear();
+		}
+
 		void Response::setHeader(const HttpHeader& header_) {
 			for (auto& header : headers) {
 				if (header.getName() == header_.getName()) {
