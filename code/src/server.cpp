@@ -22,9 +22,6 @@
 #include <stdlib.h>
 #endif
 
-#define DEBUG
-
-
 namespace mainframe {
 	namespace webguin {
 		Server::Server() {
