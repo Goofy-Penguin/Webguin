@@ -143,6 +143,7 @@ namespace mainframe {
 			if (lowered == "get") return MethodType::get;
 			if (lowered == "put") return MethodType::put;
 			if (lowered == "post") return MethodType::post;
+			if (lowered == "patch") return MethodType::patch;
 			if (lowered == "delete") return MethodType::delete_;
 			if (lowered == "options") return MethodType::options;
 
