@@ -8,7 +8,8 @@ namespace mainframe {
 			post,
 			put,
 			delete_,
-			options
+			options,
+			patch
 		};
 	}
 }
