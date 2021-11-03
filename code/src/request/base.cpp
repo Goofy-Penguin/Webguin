@@ -22,15 +22,18 @@ namespace mainframe {
 			return path;
 		}
 
-		const Param& Request::getParam(const std::string& name) const {
+		const Param& Request::getParam(std::string name) const {
+			std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 			return params.find(name)->second;
 		}
 
-		bool Request::hasParam(const std::string& name) const {
+		bool Request::hasParam(std::string name) const {
+			std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 			return params.find(name) != params.end();
 		}
 
-		void Request::setParam(const std::string& name, const Param& value) {
+		void Request::setParam(std::string name, const Param& value) {
+			std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 			params[name] = value;
 		}
 
