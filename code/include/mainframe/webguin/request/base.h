@@ -38,11 +38,11 @@ namespace mainframe {
 			virtual void setPath(const std::string& path_);
 			const std::string& getPath() const;
 
-			bool hasParam(const std::string& name) const;
-			const Param& getParam(const std::string& name) const;
+			bool hasParam(std::string name) const;
+			const Param& getParam(std::string name) const;
 
 			Param getParam(const std::string& name, Param default_) const;
-			virtual void setParam(const std::string& name, const Param& value);
+			virtual void setParam(std::string name, const Param& value);
 			virtual void clearParams();
 
 			virtual void addHeader(const HttpHeader& header_);
