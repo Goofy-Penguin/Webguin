@@ -30,12 +30,12 @@ namespace mainframe {
 				case ParamType::string: return true;
 
 				case ParamType::int_:
-					return !raw.empty() && std::find_if(raw.begin(), raw.end(), [](unsigned char c) { return !std::isdigit(c); }) == raw.end();
+					return !raw.empty() && std::find_if(raw.begin(), raw.end(), [](unsigned char c) { return !std::isdigit(c) && c != '-'; }) == raw.end();
 
 				case ParamType::number:
 				case ParamType::float_:
 				case ParamType::double_:
-					return !raw.empty() && std::find_if(raw.begin(), raw.end(), [](unsigned char c) { return !std::isdigit(c) && c != '.'; }) == raw.end();
+					return !raw.empty() && std::find_if(raw.begin(), raw.end(), [](unsigned char c) { return !std::isdigit(c) && c != '-' && c != '.'; }) == raw.end();
 
 				default: return false;
 			}
