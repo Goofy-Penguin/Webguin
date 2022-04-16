@@ -24,7 +24,7 @@ jobs:
         cd build
         export CC=/usr/bin/gcc-10
         export CXX=/usr/bin/g++-10
-        cmake .. -G Ninja -Wno-dev
+        cmake .. -G Ninja -Wno-dev -DCMAKE_BUILD_TYPE=Release
 
     - name: Ninja
       run: |
