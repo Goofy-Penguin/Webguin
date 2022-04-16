@@ -219,7 +219,7 @@ namespace mainframe {
 			if (req->hasHeader("content-length")) {
 				try {
 					datalength = std::stoi(req->getHeader("content-length").getValue());
-				} catch (const std::exception& e) {
+				} catch (const std::exception&) {
 					return false;
 				}
 			}
