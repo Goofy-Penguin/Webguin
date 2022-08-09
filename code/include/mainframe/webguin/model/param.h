@@ -21,7 +21,7 @@ namespace mainframe {
 			operator unsigned int() const { return static_cast<unsigned int>(std::stoul(raw)); }
 
 			operator long() const { return std::stol(raw); }
-			operator unsigned long() const { return static_cast<unsigned int>(std::stoul(raw)); }
+			operator unsigned long() const { return static_cast<unsigned long>(std::stoul(raw)); }
 
 			operator long long() const { return std::stoll(raw); }
 			operator unsigned long long() const { return std::stoull(raw); }
